@@ -35,9 +35,9 @@ def populate():
         {"title":"Flask",
          "url":"http://flask.pocoo.org"} ]
 
-    cats = {"Python": {"pages": python_pages},
-            "Django": {"pages": django_pages},
-            "Other Frameworks": {"pages": other_pages} }
+    cats = {"Python": {"pages": python_pages, "views": views, "likes": likes},
+            "Django": {"pages": django_pages, "views": views, "likes": likes},
+            "Other Frameworks": {"pages": other_pages, "views": views, "likes": likes} }
 
     # If you want to add more catergories or pages,
     # add them to the dictionaries above.
@@ -49,9 +49,18 @@ def populate():
     # for more information about how to iterate over a dictionary properly.
 
     for cat, cat_data in cats.items():
-        c = add_cat(cat)
+        c = add_cat(cat, views, likes)
     for p in cat_data["pages"]:
         add_page(c, p["title"], p["url"])
+        if cat == "Python":
+            cat_data["views"] = 128
+            cat_data["likes"] = 64
+        elif cat == "Django":
+            cat_data["views"] = 64
+            cat_data["likes"] = 32
+        elif cat == "Other Frameworks":
+            cat_data["views"] = 32
+            cat_data["likes"] = 16
 
     # Print out the categories we have added.
     for c in Category.objects.all():
@@ -65,8 +74,10 @@ def add_page(cat, title, url, views=0):
     p.save()
     return p
 
-def add_cat(name):
+def add_cat(name, views, likes):
     c = Category.objects.get_or_create(name=name)[0]
+    c.views=views
+    c.likes=likes
     c.save()
     return c
 
