@@ -49,8 +49,24 @@ def populate():
     # http://docs.quantifiedcode.com/python-anti-patterns/readability/
     # for more information about how to iterate over a dictionary properly.
 
-    for cat, cat_data in cats.items():
-        c = add_cat(cat, cat_data["likes"], cat_data["views"])
+    
+
+def add_page(cat, title, url, views):
+    p = Page.objects.get_or_create(category=cat, title=title, views=views)[0]
+    p.url=url
+    p.views=views
+    p.save()
+    return p
+
+def add_cat(name, views, likes):
+    c = Category.objects.get_or_create(name=name,views=views,likes=likes)[0]
+    c.views=views
+    c.likes=likes
+    c.save()
+    return c
+
+for cat, cat_data in cats.items():
+        c = add_cat(cat, views, likes)
         
         for p in cat_data["pages"]:
             add_page(c, p["title"], p["url"])
@@ -59,16 +75,6 @@ def populate():
     for c in Category.objects.all():
         for p in Page.objects.filter(category=c):
             print("- {0} - {1}".format(str(c), str(p)))
-
-def add_page(cat, title, url, views=0):
-    p = Page.objects.get_or_create(category=cat, title=title, likes = likes)[0]
-    p.save()
-    return p
-
-def add_cat(name, views, likes):
-    c = Category.objects.get_or_create(name=name, views = views, likes = likes)[0]
-    c.save()
-    return c
 
 # Start execution here!
 if __name__ == '__main__':
