@@ -28,6 +28,6 @@ urlpatterns = [
     # with rango/ to be handled by
     # the rango application
     url(r'^admin/', admin.site.urls),
-    url(r'^$', views.about, name='about'),
+    url(r'^about/$', views.about, name='about'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
